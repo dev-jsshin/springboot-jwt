@@ -1,0 +1,1 @@
+INSERT INTO TN_USER (USER_ID, PASSWORD) VALUES ('user', 'password');
