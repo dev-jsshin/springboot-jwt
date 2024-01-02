@@ -1,4 +1,4 @@
-package com.backend.module.config;
+package com.backend.module.config.handler;
 
 import com.backend.module.common.dto.ErrorResponseDto;
 import com.backend.module.common.enums.StatusCode;
