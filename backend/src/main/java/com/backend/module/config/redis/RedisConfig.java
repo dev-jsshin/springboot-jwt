@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisConfig {
 
-    @Value("${spring.data.redis.port}")
+    @Value("${spring.redis.data.port}")
     private int port;
 
-    @Value("${spring.data.redis.host}")
+    @Value("${spring.redis.data.host}")
     private String host;
 
     @Bean
