@@ -21,9 +21,12 @@ public class Users implements UserDetails {
 
     private String password;
 
-    @Override
+    private List<String> auth_type = new ArrayList<>();
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_US"));
+        return authorities;
     }
 
     @Override

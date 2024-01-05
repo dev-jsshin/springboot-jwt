@@ -51,7 +51,7 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
 
         // Create Access Token
-        Date accessTokenExpiresIn = new Date(now + (ACCESS_TOKEN_EXPIRE_TIME * accessTokenMinute));
+        Date accessTokenExpiresIn = new Date(now + (ACCESS_TOKEN_EXPIRE_TIME * accessTokenMinute * 30));
         String accessToken = Jwts.builder()
                             .setSubject(authentication.getName())
                             .claim(AUTHORITIES_KEY, authorities)
@@ -82,18 +82,15 @@ public class JwtTokenProvider {
             throw new RuntimeException("Token without permission information");
         }
 
-        // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

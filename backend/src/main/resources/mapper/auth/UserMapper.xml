@@ -4,7 +4,8 @@
 
     <select id="findByUserId" parameterType="string" resultType="com.backend.api.auth.entity.Users">
         SELECT USER_ID,
-               PASSWORD
+               PASSWORD,
+               AUTH_TYPE
         FROM TN_USER
         WHERE USER_ID = #{userId}
     </select>
