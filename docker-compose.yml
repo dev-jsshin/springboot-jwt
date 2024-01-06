@@ -17,6 +17,7 @@ services:
             - --collation-server=utf8mb4_unicode_ci
         volumes:
             - ./database/mysql/data/mysql/:/var/lib/mysql
+            - ./database/mysql/init:/docker-entrypoint-initdb.d
 
     redis:
         image: redis
@@ -25,4 +26,4 @@ services:
         ports:
             - 6379:6379
         volumes:
-            - ./database/redis/data/mysql/:/data
+            - ./database/redis/data/:/data
