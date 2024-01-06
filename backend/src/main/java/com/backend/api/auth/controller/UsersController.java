@@ -43,4 +43,17 @@ public class UsersController {
         return userService.login(login);
     }
 
+    @PostMapping("/reissue")
+    public DataResponseDto<Object> reissue(@Validated UserRequestDto.Reissue reissue, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<FieldError> list = bindingResult.getFieldErrors();
+            for(FieldError error : list) {
+                throw new GeneralException(StatusCode.BAD_REQUEST, error.getDefaultMessage());
+            }
+        }
+
+        return userService.reissue(reissue);
+    }
+
 }

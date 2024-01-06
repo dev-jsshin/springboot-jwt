@@ -26,4 +26,14 @@ public class UserRequestDto {
             return new UsernamePasswordAuthenticationToken(user_id, password);
         }
     }
+
+    @Getter
+    @Setter
+    public static class Reissue {
+        @NotEmpty(message = "Please enter your accessToken")
+        private String accessToken;
+
+        @NotEmpty(message = "Please enter your refreshToken")
+        private String refreshToken;
+    }
 }

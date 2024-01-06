@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +49,38 @@ public class UserService {
         // RefreshToken Redis Save (expirationTime Auto Delete)
         redisTemplate.opsForValue()
                       .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.SECONDS);
+
+        return DataResponseDto.of(tokenInfo);
+    }
+
+    public DataResponseDto<Object> reissue(UserRequestDto.Reissue reissue) {
+
+        // Refresh Token Check
+        if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
+            throw new GeneralException(StatusCode.BAD_REQUEST, "Invalid Refresh Token");
+        }
+
+        // Get userId from Access Token
+        Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
+
+        // Get Refresh Token From Redis
+        String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+
+        // If a Refresh Token does not exist due to a logout
+        if(ObjectUtils.isEmpty(refreshToken)) {
+            throw new GeneralException(StatusCode.BAD_REQUEST, "Invalid Refresh Token");
+        }
+
+        if(!refreshToken.equals(reissue.getRefreshToken())) {
+            throw new GeneralException(StatusCode.BAD_REQUEST, "Invalid Refresh Token");
+        }
+
+        // Create a new token
+        UserResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+        // Redis Update
+        redisTemplate.opsForValue()
+                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return DataResponseDto.of(tokenInfo);
     }

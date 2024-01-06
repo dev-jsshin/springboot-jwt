@@ -52,7 +52,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/login", "/auth/reissue").permitAll()
                                 .requestMatchers("/bs/**").permitAll()
                                 .requestMatchers("/test/**").hasRole("US")
                                 .anyRequest().authenticated()
