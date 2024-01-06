@@ -36,4 +36,14 @@ public class UserRequestDto {
         @NotEmpty(message = "Please enter your refreshToken")
         private String refreshToken;
     }
+
+    @Getter
+    @Setter
+    public static class Logout {
+        @NotEmpty(message = "Bad request")
+        private String accessToken;
+
+        @NotEmpty(message = "Bad request")
+        private String refreshToken;
+    }
 }

@@ -84,4 +84,27 @@ public class UserService {
 
         return DataResponseDto.of(tokenInfo);
     }
+
+    public DataResponseDto<Object> logout(UserRequestDto.Logout logout) {
+        // Check Access Token
+        if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
+            throw new GeneralException(StatusCode.BAD_REQUEST, "Bad request");
+        }
+
+        // Get userId from Access Token
+        Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
+
+        // Find Refresh Token From Redis
+        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+            // Refresh Token Delete
+            redisTemplate.delete("RT:" + authentication.getName());
+        }
+
+        // Access Token BlackList Save
+        Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
+        redisTemplate.opsForValue()
+                     .set(logout.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+
+        return DataResponseDto.of(StatusCode.OK);
+    }
 }
