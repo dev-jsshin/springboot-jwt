@@ -16,12 +16,13 @@ services:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
         volumes:
-            - ./database/data/mysql/:/var/lib/mysql
+            - ./database/mysql/data/mysql/:/var/lib/mysql
 
     redis:
         image: redis
-        container_name: sejongmate_redis
         restart: always
         hostname: redis
         ports:
-        - 6379:6379
+            - 6379:6379
+        volumes:
+            - ./database/redis/data/mysql/:/data

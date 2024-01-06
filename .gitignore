@@ -1,1 +1,2 @@
-database/data
+database/mysql/data
+database/redis/data
