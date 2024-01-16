@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface UserMapper {
 
     Optional<Users> findByUserId(String userId);
+
+    int existsByUserId(String userId);
+
+    void save(Users user);
 }

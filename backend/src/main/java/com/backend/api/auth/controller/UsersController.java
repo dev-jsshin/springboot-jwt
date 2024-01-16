@@ -30,6 +30,19 @@ public class UsersController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/sign-up")
+    public DataResponseDto<Object> signUp(@Validated UserRequestDto.SignUp signUp, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<FieldError> list = bindingResult.getFieldErrors();
+            for(FieldError error : list) {
+                throw new GeneralException(StatusCode.BAD_REQUEST, error.getDefaultMessage());
+            }
+        }
+
+        return userService.signUp(signUp);
+    }
+
     @PostMapping("/login")
     public DataResponseDto<Object> login(@Validated UserRequestDto.Login login, BindingResult bindingResult) {
 

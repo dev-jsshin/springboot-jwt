@@ -47,7 +47,8 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                                                            HttpHeaders headers, HttpStatus status, WebRequest request) {
         return super.handleExceptionInternal(
                 e,
-                ErrorResponseDto.of(errorCode, errorCode.getMessage(e)),
+                // ErrorResponseDto.of(errorCode, errorCode.getMessage(e)),
+                ErrorResponseDto.of(errorCode, errorCode.getMessage()),
                 headers,
                 status,
                 request

@@ -15,6 +15,17 @@ public class UserRequestDto {
 
     @Getter
     @Setter
+    public static class SignUp {
+
+        @NotEmpty(message = "Please enter your user_id")
+        private String user_id;
+
+        @NotEmpty(message = "Please enter your password")
+        private String password;
+    }
+
+    @Getter
+    @Setter
     public static class Login {
         @NotEmpty(message = "Please enter your user_id")
         private String user_id;

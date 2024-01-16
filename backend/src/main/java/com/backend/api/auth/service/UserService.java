@@ -2,6 +2,8 @@ package com.backend.api.auth.service;
 
 import com.backend.api.auth.dto.request.UserRequestDto;
 import com.backend.api.auth.dto.response.UserResponseDto;
+import com.backend.api.auth.entity.Users;
+import com.backend.api.auth.enums.Authority;
 import com.backend.api.auth.mapper.UserMapper;
 import com.backend.module.common.dto.DataResponseDto;
 import com.backend.module.common.enums.StatusCode;
@@ -12,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -27,10 +30,30 @@ public class UserService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
     RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     UserMapper userMapper;
+
+    public DataResponseDto<Object> signUp(UserRequestDto.SignUp signUp) {
+
+        if (userMapper.existsByUserId(signUp.getUser_id()) > 0) {
+            throw new GeneralException(StatusCode.BAD_REQUEST, "This account is already subscribed");
+        }
+
+        Users user = Users.builder()
+                          .user_id(signUp.getUser_id())
+                          .password(passwordEncoder.encode(signUp.getPassword()))
+                          .auth_type(Authority.US_AUTH_TYPE.getValue())
+                          .build();
+
+        userMapper.save(user);
+
+        return DataResponseDto.of(StatusCode.OK);
+    }
 
     public DataResponseDto<Object> login(UserRequestDto.Login login) {
 

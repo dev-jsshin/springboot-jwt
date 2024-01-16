@@ -21,7 +21,7 @@ public class Users implements UserDetails {
 
     private String password;
 
-    private List<String> auth_type = new ArrayList<>();
+    private String auth_type;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
